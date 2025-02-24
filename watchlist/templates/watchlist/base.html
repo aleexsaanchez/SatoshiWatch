@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SatoshiWatch{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Floating Action Button and Menu -->
+    <a href="#" class="fab">☰</a>
+    <div class="fab-menu">
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'crypto_list' %}">Crypto List</a>
+        <a href="{% url 'watchlist' %}">Watchlist</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}">Logout</a>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a>
+        {% endif %}
+    </div>
+
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

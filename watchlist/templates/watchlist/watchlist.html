@@ -1,0 +1,18 @@
+{% extends 'watchlist/base.html' %}
+{% block title %}SatoshiWatch - Watchlist{% endblock %}
+{% block content %}
+    <h1>Your Watchlist</h1>
+    {% if watchlist %}
+        <div class="crypto-grid">
+            {% for item in watchlist %}
+                <div class="crypto-card">
+                    <h3>{{ item.crypto.name }} ({{ item.crypto.symbol|upper }})</h3>
+                    <p>${{ item.crypto.price_usd }}</p>
+                    <a href="{% url 'remove_from_watchlist' item.crypto.id %}">Remove</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No cryptos in your watchlist yet. <a href="{% url 'crypto_list' %}">Add some!</a></p>
+    {% endif %}
+{% endblock %}

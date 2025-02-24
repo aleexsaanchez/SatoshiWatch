@@ -1,0 +1,19 @@
+{% extends 'watchlist/base.html' %}
+{% block title %}SatoshiWatch - Home{% endblock %}
+{% block content %}
+    <h1>Welcome to SatoshiWatch</h1>
+    <p>Track your favorite cryptocurrencies effortlessly.</p>
+    <div class="crypto-grid">
+        {% for crypto in top_cryptos %}
+            <div class="crypto-card">
+                <h3>{{ crypto.name }} ({{ crypto.symbol|upper }})</h3>
+                <p>${{ crypto.current_price }}</p>
+            </div>
+        {% endfor %}
+    </div>
+    {% if user.is_authenticated %}
+        <p>Explore the <a href="{% url 'crypto_list' %}">Crypto List</a> or your <a href="{% url 'watchlist' %}">Watchlist</a>.</p>
+    {% else %}
+        <p><a href="{% url 'login' %}">Log in</a> to start tracking.</p>
+    {% endif %}
+{% endblock %}
