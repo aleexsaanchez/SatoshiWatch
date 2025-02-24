@@ -1,0 +1,19 @@
+# Virtual environment
+venv/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Django stuff
+*.log
+*.pot
+*.pyc
+db.sqlite3
+
+# Static files collected
+staticfiles/
+
+# macOS/Windows cruft
+.DS_Store
+Thumbs.db
