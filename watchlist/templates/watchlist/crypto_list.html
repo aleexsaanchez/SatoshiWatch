@@ -3,49 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cryptocurrency Prices</title>
+    <title>SatoshiWatch</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: white;
-            text-align: center;
-            padding: 20px;
-        }
-        table {
-            width: 80%;
-            margin: auto;
-            border-collapse: collapse;
-            background-color: #1e1e1e;
-        }
-        th, td {
-            padding: 12px;
-            border: 1px solid #444;
-        }
-        th {
-            background-color: #333;
-        }
+        body { font-family: Arial, sans-serif; background: #1a1a2e; color: #e0e0e0; padding: 20px; }
+        .crypto-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .crypto-card { background: #16213e; padding: 15px; border: 1px solid #00d4ff; border-radius: 5px; }
+        a { color: #00d4ff; text-decoration: none; }
+        a:hover { color: #ff007a; }
+        h1, h2 { color: #00d4ff; }
     </style>
 </head>
 <body>
-    <h1>Live Cryptocurrency Prices</h1>
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Market Cap (USD)</th>
-            <th>Price (USD)</th>
-        </tr>
+    <h1>SatoshiWatch</h1>
+    <h2>Top Cryptocurrencies</h2>
+    <div class="crypto-grid">
         {% for crypto in cryptos %}
-        <tr>
-            <td>{{ crypto.name }}</td>
-            <td>${{ crypto.market_cap|default:"N/A" }}</td>
-            <td>${{ crypto.price_usd|floatformat:2 }}</td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="3">No data available</td>
-        </tr>
+            <div class="crypto-card">
+                <h3>{{ crypto.name }} ({{ crypto.symbol|upper }})</h3>
+                <p>${{ crypto.price_usd }}</p>
+                {% if request.user.is_authenticated %}
+                    {% if crypto.id in watchlist_ids %}
+                        <a href="{% url 'remove_from_watchlist' crypto.id %}">Remove</a>
+                    {% else %}
+                        <a href="{% url 'add_to_watchlist' crypto.id %}">Add to Watchlist</a>
+                    {% endif %}
+                {% else %}
+                    <p><a href="{% url 'login' %}">Log in</a> to add to watchlist</p>
+                {% endif %}
+            </div>
         {% endfor %}
-    </table>
+    </div>
+    {% if request.user.is_authenticated %}
+        <h2>Your Watchlist</h2>
+        {% for item in watchlist %}
+            <p>{{ item.crypto.name }} ({{ item.crypto.symbol|upper }}) - <a href="{% url 'remove_from_watchlist' item.crypto.id %}">Remove</a></p>
+        {% empty %}
+            <p>No cryptos in your watchlist yet.</p>
+        {% endfor %}
+    {% endif %}
 </body>
 </html>
