@@ -1,22 +1,25 @@
 {% extends 'watchlist/base.html' %}
-{% block title %}SatoshiWatch - Crypto List{% endblock %}
+{% block title %}Crypto List - SatoshiWatch{% endblock %}
 {% block content %}
-    <h1>Crypto List</h1>
-    <div class="crypto-grid">
-        {% for crypto in cryptos %}
-            <div class="crypto-card">
-                <h3>{{ crypto.name }} ({{ crypto.symbol|upper }})</h3>
-                <p>${{ crypto.price_usd }}</p>
-                {% if user.is_authenticated %}
+    <div class="crypto-list-container">
+        <h1>Cryptocurrencies</h1>
+        <div class="crypto-list">
+            {% for crypto in cryptos %}
+                <div class="crypto-card">
+                    <h3>{{ crypto.name }} ({{ crypto.symbol|upper }})</h3>
+                    <p>${{ crypto.price_usd|floatformat:2 }}</p>
                     {% if crypto.id in watchlist_ids %}
-                        <a href="{% url 'remove_from_watchlist' crypto.id %}">Remove</a>
+                    <p class="already-in-watchlist">Already have it</p>
                     {% else %}
-                        <a href="{% url 'add_to_watchlist' crypto.id %}">Add to Watchlist</a>
+                        <form method="POST" action="{% url 'add_to_watchlist' crypto.id %}">
+                            {% csrf_token %}
+                            <button type="submit">Add to Watchlist</button>
+                        </form>
                     {% endif %}
-                {% else %}
-                    <p><a href="{% url 'login' %}">Log in</a> to add</p>
-                {% endif %}
-            </div>
-        {% endfor %}
+                </div>
+            {% empty %}
+                <p>No cryptocurrencies available.</p>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}

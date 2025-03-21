@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login, logout
 from watchlist.models import Cryptocurrency, CryptoWatchlist
 import requests
 
@@ -26,13 +28,20 @@ def crypto_list(request):
 
 @login_required
 def watchlist(request):
+    print(f"Logged-in user: {request.user.username}")
     watchlist = CryptoWatchlist.objects.filter(user=request.user)
+    print(f"Watchlist entries: {watchlist}")
     return render(request, 'watchlist/watchlist.html', {'watchlist': watchlist})
 
 @login_required
 def add_to_watchlist(request, crypto_id):
-    crypto = Cryptocurrency.objects.get(id=crypto_id)
-    CryptoWatchlist.objects.get_or_create(user=request.user, crypto=crypto)
+    if request.method == 'POST':
+        crypto = Cryptocurrency.objects.get(id=crypto_id)
+        watchlist_item, created = CryptoWatchlist.objects.get_or_create(user=request.user, crypto=crypto)
+        if created:
+            print(f"Added {crypto.name} to watchlist for {request.user.username}")
+        else:
+            print(f"{crypto.name} already in watchlist for {request.user.username}")
     return redirect('crypto_list')
 
 @login_required
@@ -45,3 +54,17 @@ def home(request):
     top_cryptos = get_top_cryptos()[:3]  # Top 3 from API
     return render(request, 'watchlist/home.html', {'top_cryptos': top_cryptos})
 
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user) #Auto login after signup
+            return redirect('home')
+    else:
+        form = UserCreationForm()
+    return render(request, 'watchlist/signup.html', {'form':form})
+
+def logout_view(request):
+    logout(request)
+    return redirect('home')

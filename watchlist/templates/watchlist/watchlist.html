@@ -1,18 +1,21 @@
 {% extends 'watchlist/base.html' %}
-{% block title %}SatoshiWatch - Watchlist{% endblock %}
+{% block title %}Watchlist - SatoshiWatch{% endblock %}
 {% block content %}
-    <h1>Your Watchlist</h1>
-    {% if watchlist %}
-        <div class="crypto-grid">
+    <div class="crypto-list-container">
+        <h1>Your Watchlist</h1>
+        <div class="crypto-list">
             {% for item in watchlist %}
                 <div class="crypto-card">
                     <h3>{{ item.crypto.name }} ({{ item.crypto.symbol|upper }})</h3>
-                    <p>${{ item.crypto.price_usd }}</p>
-                    <a href="{% url 'remove_from_watchlist' item.crypto.id %}">Remove</a>
+                    <p>${{ item.crypto.price_usd|floatformat:2 }}</p>
+                    <form method="POST" action="{% url 'remove_from_watchlist' item.crypto.id %}">
+                        {% csrf_token %}
+                        <button type="submit">Remove</button>
+                    </form>
                 </div>
+            {% empty %}
+                <p>Your watchlist is empty.</p>
             {% endfor %}
         </div>
-    {% else %}
-        <p>No cryptos in your watchlist yet. <a href="{% url 'crypto_list' %}">Add some!</a></p>
-    {% endif %}
+    </div>
 {% endblock %}

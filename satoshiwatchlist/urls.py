@@ -26,8 +26,9 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('cryptos/', include('watchlist.urls')),
     path('login/', auth_views.LoginView.as_view(template_name='watchlist/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
+    path('logout/', views.logout_view, name='logout'), #custom logout view
     path('watchlist/', views.watchlist, name='watchlist'),
+    path('signup/', views.signup, name='signup')
 ]
 
 if settings.DEBUG:

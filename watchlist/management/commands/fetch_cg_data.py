@@ -21,13 +21,13 @@ class Command(BaseCommand):  # Correct class name
 
             for crypto in data:
                 Cryptocurrency.objects.update_or_create(
-                    name=crypto['name'],
-                    defaults={
-                        'symbol': crypto['symbol'],
-                        'price_usd': crypto.get('current_price', 0),
-                        'market_cap': crypto.get('market_cap', 0),
-                    }
-                )
+            name=crypto['name'],
+            defaults={
+                'symbol': crypto['symbol'],
+                'price_usd': crypto.get('current_price', 0),
+                'market_cap': crypto.get('market_cap', 0),
+                }
+            )
                 self.stdout.write(self.style.SUCCESS(f"Updated {crypto['name']}"))
         except Exception as e:
             self.stdout.write(self.style.ERROR(f"Error fetching data: {e}"))
