@@ -96,7 +96,7 @@ body {
     background: rgba(0, 212, 255, 0.1);
     opacity: 0;
     transition: opacity 0.3s;
-    pointer-events: none; /* Allow clicks to pass through */
+    pointer-events: none;
 }
 
 .crypto-card:hover::before {
@@ -112,6 +112,7 @@ body {
     font-size: 1.5rem;
     margin-bottom: 10px;
     color: #00d4ff;
+    text-shadow: 0 0 5px #00d4ff;
 }
 
 .crypto-card p {
@@ -127,13 +128,16 @@ body {
     border-radius: 5px;
     color: #1a1a2e;
     cursor: pointer;
-    transition: background 0.3s;
-    position: relative; /* Ensure button is above other elements */
-    z-index: 1; /* Ensure button is clickable */
+    transition: background 0.3s, transform 0.3s;
+    position: relative;
+    z-index: 1;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
 }
 
 .crypto-card button:hover {
     background: #ff007a;
+    transform: scale(1.05);
 }
 
 .testimony {
@@ -152,18 +156,23 @@ body {
     font-size: 1.4rem;
 }
 
-/* Crypto List and Watchlist Styles */
 .crypto-list-container {
     max-width: 1300px;
     margin: 0 auto;
     padding: 40px 20px;
 }
 
-.crypto-list-container h1 {
+.crypto-list-container h1,
+.crypto-list-container h2 {
     font-size: 2.5rem;
     text-align: center;
     margin-bottom: 40px;
     text-shadow: 0 0 10px #00d4ff;
+}
+
+.crypto-list-container h2 {
+    font-size: 1.8rem;
+    margin-top: 40px;
 }
 
 .crypto-list {
@@ -178,6 +187,14 @@ body {
     color: #00d4ff;
     font-style: italic;
     margin-top: 15px;
+}
+
+.no-data {
+    font-size: 1.3rem;
+    color: #e0e0e0;
+    text-align: center;
+    margin: 20px 0;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
 }
 
 .fab {
@@ -221,6 +238,7 @@ body {
     color: #00d4ff;
     text-decoration: none;
     display: block;
+    transition: color 0.3s;
 }
 
 .fab-menu a:hover {
@@ -237,14 +255,35 @@ body {
 }
 
 .form-container input[type="text"],
-.form-container input[type="password"] {
+.form-container input[type="password"],
+.price-alert-form input[type="number"] {
     width: 100%;
-    padding: 10px;
+    max-width: 150px;
+    padding: 8px;
     margin: 10px 0;
     background: #1a1a2e;
     border: 1px solid #00d4ff;
     border-radius: 5px;
     color: #e0e0e0;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.form-container input[type="text"]::-webkit-inner-spin-button,
+.form-container input[type="text"]::-webkit-outer-spin-button,
+.form-container input[type="password"]::-webkit-inner-spin-button,
+.form-container input[type="password"]::-webkit-outer-spin-button,
+.price-alert-form input[type="number"]::-webkit-inner-spin-button,
+.price-alert-form input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.form-container input[type="text"],
+.form-container input[type="password"],
+.price-alert-form input[type="number"] {
+    -moz-appearance: textfield;
 }
 
 .form-container button {
@@ -255,10 +294,158 @@ body {
     border-radius: 5px;
     color: #1a1a2e;
     cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
 }
 
 .form-container button:hover {
     background: #ff007a;
+    transform: scale(1.05);
+}
+
+.price-alert-form {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.price-alert-form label {
+    font-size: 0.9rem;
+    color: #00d4ff;
+    text-shadow: 0 0 5px #00d4ff;
+}
+
+.price-alert-form button {
+    background: #00d4ff;
+    color: #1a1a2e;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+}
+
+.price-alert-form button:hover {
+    background: #ff007a;
+    transform: scale(1.05);
+}
+
+.notifications-container {
+    background: linear-gradient(145deg, #16213e, #1a1a2e);
+    border: 1px solid #00d4ff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 30px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+    transition: box-shadow 0.3s;
+}
+
+.notifications-container:hover {
+    box-shadow: 0 0 25px rgba(0, 212, 255, 0.7);
+}
+
+.notifications-container h2 {
+    font-size: 1.8rem;
+    color: #00d4ff;
+    margin-bottom: 15px;
+    text-shadow: 0 0 10px #00d4ff;
+}
+
+.notifications-container ul {
+    list-style: none;
+    padding: 0;
+}
+
+.notifications-container li {
+    font-size: 1.3rem;
+    color: #e0e0e0;
+    margin: 8px 0;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+}
+
+.alerts-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+    background: #1a1a2e;
+    border: 1px solid #00d4ff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+}
+
+.alerts-table thead tr {
+    background: linear-gradient(145deg, #16213e, #1a1a2e);
+}
+
+.alerts-table th {
+    padding: 15px;
+    border: 1px solid #00d4ff;
+    font-size: 1.2rem;
+    color: #00d4ff;
+    text-shadow: 0 0 5px #00d4ff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.alerts-table tbody tr {
+    background: #1a1a2e;
+    transition: background 0.3s;
+}
+
+.alerts-table tbody tr:hover {
+    background: #21213b;
+}
+
+.alerts-table td {
+    padding: 15px;
+    border: 1px solid #00d4ff;
+    font-size: 1.1rem;
+    color: #e0e0e0;
+    text-align: center;
+}
+
+.alerts-table .delete-button {
+    background: #ff007a;
+    color: #e0e0e0;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    transition: background 0.3s, transform 0.3s;
+}
+
+.alerts-table .delete-button:hover {
+    background: #00d4ff;
+    color: #1a1a2e;
+    transform: scale(1.05);
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 10px 20px;
+    background: #16213e;
+    border: 1px solid #00d4ff;
+    border-radius: 5px;
+    color: #00d4ff;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+}
+
+.back-link:hover {
+    background: #00d4ff;
+    color: #1a1a2e;
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.7);
 }
 
 .footer {
@@ -277,6 +464,7 @@ body {
 
 .footer a {
     color: #00d4ff;
+    transition: color 0.3s;
 }
 
 .footer a:hover {

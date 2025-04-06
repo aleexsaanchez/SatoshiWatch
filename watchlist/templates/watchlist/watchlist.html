@@ -3,11 +3,18 @@
 {% block content %}
     <div class="crypto-list-container">
         <h1>Your Watchlist</h1>
+        <a href="{% url 'check_price_alerts' %}" style="display: inline-block; margin-bottom: 20px; color: #00d4ff;">View Your Price Alerts</a>
         <div class="crypto-list">
             {% for item in watchlist %}
                 <div class="crypto-card">
                     <h3>{{ item.crypto.name }} ({{ item.crypto.symbol|upper }})</h3>
                     <p>${{ item.crypto.price_usd|floatformat:2 }}</p>
+                    <form method="POST" action="{% url 'set_price_alert' item.crypto.id %}" class="price-alert-form">
+                        {% csrf_token %}
+                        {{ form.target_price.label_tag }}
+                        {{ form.target_price }}
+                        <button type="submit">Set Price Alert</button>
+                    </form>
                     <form method="POST" action="{% url 'remove_from_watchlist' item.crypto.id %}">
                         {% csrf_token %}
                         <button type="submit">Remove</button>

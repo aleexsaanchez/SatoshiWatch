@@ -1,0 +1,59 @@
+{% extends 'watchlist/base.html' %}
+{% block title %}Notifications - SatoshiWatch{% endblock %}
+{% block content %}
+    <div class="crypto-list-container">
+        <h1>Notifications</h1>
+        {% if triggered_alerts %}
+            <div class="notifications-container">
+                <h2>New Notifications</h2>
+                <ul>
+                    {% for alert in triggered_alerts %}
+                        <li>{{ alert }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% else %}
+            <p class="no-data">No new notifications.</p>
+        {% endif %}
+
+        <h2>Your Price Alerts</h2>
+        {% if all_alerts %}
+            <table class="alerts-table">
+                <thead>
+                    <tr>
+                        <th>Cryptocurrency</th>
+                        <th>Target Price ($)</th>
+                        <th>Current Price ($)</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for alert in all_alerts %}
+                        <tr>
+                            <td>{{ alert.crypto.name }} ({{ alert.crypto.symbol|upper }})</td>
+                            <td>${{ alert.target_price|floatformat:2 }}</td>
+                            <td>${{ alert.crypto.price_usd|floatformat:2 }}</td>
+                            <td>
+                                {% if alert.is_triggered %}
+                                    Triggered
+                                {% else %}
+                                    Active
+                                {% endif %}
+                            </td>
+                            <td>
+                                <form method="POST" action="{% url 'delete_alert' alert.id %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="delete-button">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="no-data">No price alerts set.</p>
+        {% endif %}
+        <a href="{% url 'crypto_list' %}" class="back-link">Back to Crypto List</a>
+    </div>
+{% endblock %}
