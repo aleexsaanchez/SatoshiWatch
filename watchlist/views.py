@@ -3,9 +3,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout
-from watchlist.models import Cryptocurrency, CryptoWatchlist, PriceAlert
+from watchlist.models import Cryptocurrency, CryptoWatchlist, PriceAlert, Feedback
 from watchlist.forms import PriceAlertForm
 import requests
+from django.contrib import messages
 
 def get_top_cryptos():
     url = "https://api.coingecko.com/api/v3/coins/markets"
@@ -144,3 +145,17 @@ def update_crypto_prices():
             print(f"Cryptocurrency with symbol {crypto_data['symbol']} not found.")
         except KeyError:
             print(f"Error updating price for {crypto_data.get('symbol', 'unknown')}.")
+
+def submit_feedback(request):
+    if request.method == 'POST':
+        message = request.POST.get('message')
+        if message:
+            Feedback.objects.create(
+                user=request.user if request.user.is_authenticated else None,
+                message=message
+            )
+            messages.success(request, 'Thank you for your feedback!')
+        else:
+            messages.error(request, 'Feedback message cannot be empty.')
+        return redirect('home')
+    return render(request, 'watchlist/feedback.html')

@@ -28,4 +28,10 @@ class PriceAlert(models.Model):
     def __str__(self):
         return f"Alert for {self.crypto} at ${self.target_price} by {self.user.username}"
     
-    
+class Feedback(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    message = models.TextField()
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Feedback from {self.user.username if self.user else 'Anonymous'}"
