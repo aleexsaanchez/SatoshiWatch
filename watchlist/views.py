@@ -118,3 +118,29 @@ def check_price_alerts(request):
 def delete_alert(request, alert_id):
     PriceAlert.objects.filter(id=alert_id, user=request.user).delete()
     return redirect('check_price_alerts')
+
+#function to automate crypto real time price
+def update_crypto_prices():
+    url = "https://api.coingecko.com/api/v3/coins/markets"
+    params = {
+        "vs_currency": "usd",
+        "order": "market_cap_desc",
+        "per_page": 50,
+        "page": 1,
+        "sparkline": False
+    }
+    response = requests.get(url, params=params)
+    if response.status_code != 200:
+        print(f"API request failed with status {response.status_code}")
+        return
+    cryptos_data = response.json()
+    for crypto_data in cryptos_data:
+        try:
+            crypto = Cryptocurrency.objects.get(symbol=crypto_data['symbol'].lower())
+            crypto.price_usd = crypto_data['current_price']
+            crypto.save()
+            print(f"Updated {crypto.name} price to ${crypto.price_usd}")
+        except Cryptocurrency.DoesNotExist:
+            print(f"Cryptocurrency with symbol {crypto_data['symbol']} not found.")
+        except KeyError:
+            print(f"Error updating price for {crypto_data.get('symbol', 'unknown')}.")
